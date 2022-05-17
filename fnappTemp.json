@@ -160,6 +160,15 @@
                 "name": "[parameters('storageAccountType')]"
             },
             "kind": "Storage",
+            "properties": {
+                "networkAcls": {
+                    "resourceAccessRules": [],
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Deny"
+                }
+            },
             "tags": {
                 "Owner": "[parameters('ServiceOwner')]",
                 "Purpose": "[parameters('Purpose')]",
