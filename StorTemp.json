@@ -1,0 +1,204 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccountName1": {
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Storage Account."
+            }
+        },
+		"storageAccountName2": {
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Storage Account."
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "allowedValues": [
+                "eastus",
+                "eastus2",
+                "southcentralus",
+                "westus2",
+                "australiaeast",
+                "australiacentral",
+                "canadacentral",
+                "canadaeast",
+                "australiasoutheast",
+                "southeastasia",
+                "northeurope",
+                "uksouth",
+                "westeurope",
+                "centralus",
+                "northcentralus",
+                "westus",
+                "southafricanorth",
+                "centralindia",
+                "eastasia",
+                "japaneast",
+                "koreacentral",
+                "francecentral",
+                "germanywestcentral",
+                "norwayeast",
+                "switzerlandnorth",
+                "uaenorth",
+                "brazilsouth",
+                "westcentralus",
+                "japanwest",
+                "koreasouth",
+                "southindia",
+                "westindia",
+                "ukwest"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Location of the APIM."
+            }
+        },
+        "AccountKind": {
+            "defaultValue": "StorageV2",
+            "allowedValues": [
+                "StorageV2",
+                "Storage",
+                "BlobStorage",
+                "BlockBlobStorage",
+                "FileStorage"
+            ],
+            "type": "String"
+        },
+        "AccountType": {
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_ZRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Standard_GZRS",
+                "Standard_RAGZRS",
+                "Premium_LRS"
+            ],
+            "type": "String"
+        },
+        "storageAccessTier": {
+            "defaultValue": "Hot",
+            "allowedValues": [
+                "Hot",
+                "Cool"
+            ],
+            "type": "String"
+        },
+        "minimumTLSVersion": {
+            "defaultValue": "TLS1_2",
+            "allowedValues": [
+                "TLS1_0",
+                "TLS1_1",
+                "TLS1_2"
+            ],
+            "type": "String"
+        },
+        "supportsHttpsTrafficOnly": {
+            "defaultValue": "false",
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "type": "String"
+        },
+        "allowBlobPublicAccess": {
+            "defaultValue": "false",
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "type": "String"
+        },
+		"blobName": {
+            "defaultValue": "system",
+            "type": "String"
+        },
+        "ServiceOwner": {
+            "type": "String",
+            "metadata": {
+                "description": "The owner of resource."
+            }
+        },
+        "Type": {
+            "type": "String",
+            "metadata": {
+                "description": "The type of the resource."
+            }
+        },
+        "Environment": {
+            "allowedValues": [
+                "dev",
+                "test",
+                "pre-prod",
+                "prod"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "The environment of the resource."
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "name": "[parameters('storageAccountName1')]",
+            "location": "[parameters('location')]",
+            "tags": {
+                "Owner": "[parameters('ServiceOwner')]",
+                "Type": "[parameters('Type')]",
+                "Enviornment": "[parameters('Environment')]"
+            },
+            "sku": {
+                "name": "[parameters('AccountType')]"
+            },
+            "kind": "[parameters('AccountKind')]",
+            "properties": {
+                "accessTier": "[parameters('storageAccessTier')]",
+                "minimumTlsVersion": "[parameters('minimumTLSVersion')]",
+                "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
+                "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]"
+            }
+        },
+		        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "name": "[parameters('storageAccountName2')]",
+            "location": "[parameters('location')]",
+            "tags": {
+                "Owner": "[parameters('ServiceOwner')]",
+                "Type": "[parameters('Type')]",
+                "Enviornment": "[parameters('Environment')]"
+            },
+            "sku": {
+                "name": "[parameters('AccountType')]"
+            },
+            "kind": "[parameters('AccountKind')]",
+            "properties": {
+                "accessTier": "[parameters('storageAccessTier')]",
+                "minimumTlsVersion": "[parameters('minimumTLSVersion')]",
+                "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
+                "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]"
+            }
+        },
+		    {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('storageAccountName2'), '/default/', parameters('blobName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName2'))]"
+            ],
+            "properties": {
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        }
+		
+    ]
+}
