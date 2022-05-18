@@ -418,8 +418,8 @@
               "destinationPortRange": "3389",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*"
+              "sourceAddressPrefix": "27.62.213.159",
+              "destinationAddressPrefix": "27.62.213.159"
             }
           }
         ]
