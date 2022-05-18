@@ -159,14 +159,10 @@
             "sku": {
                 "name": "[parameters('storageAccountType')]"
             },
-            "kind": "Storage",
+            "kind": "StorageV2",
             "properties": {
                 "networkAcls": {
-                    "resourceAccessRules": [],
-                    "bypass": "AzureServices",
-                    "virtualNetworkRules": [],
-                    "ipRules": [],
-                    "defaultAction": "Deny"
+                    "bypass": "AzureServices"
                 }
             },
             "tags": {
@@ -210,6 +206,8 @@
             ],
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+                "clientCertEnabled": true,
+                "httpsOnly": false,
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -236,7 +234,9 @@
                             "name": "FUNCTIONS_WORKER_RUNTIME",
                             "value": "[variables('functionWorkerRuntime')]"
                         }
-                    ]
+                    ],
+                    "http20Enabled": true,
+                    "minTlsVersion": "1.2"
                 }
             },
             "tags": {
