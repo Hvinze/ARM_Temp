@@ -162,7 +162,8 @@
             "kind": "StorageV2",
             "properties": {
                 "networkAcls": {
-                    "bypass": "AzureServices"
+                    "bypass": "AzureServices",
+                    "defaultAction": "Deny"
                 }
             },
             "tags": {
@@ -207,7 +208,7 @@
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
                 "clientCertEnabled": true,
-                "httpsOnly": false,
+                "httpsOnly": true,
                 "siteConfig": {
                     "appSettings": [
                         {
