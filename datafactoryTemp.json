@@ -1,0 +1,294 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "defaultValue": "[format('datafactory{0}', uniqueString(resourceGroup().id))]",
+            "type": "string",
+            "metadata": {
+                "description": "Data Factory Name"
+            }
+        },
+        "version": {
+            "defaultValue": "V2",
+            "allowedValues": [
+                "V1",
+                "V2"
+            ],
+            "type": "string",
+            "metadata": {
+                "description": "Version of the Datafactory"
+            }
+        },
+        "location": {
+            "defaultValue": "eastus2",
+            "type": "string",
+            "allowedValues": [
+                "australiaeast",
+                "australiasoutheast",
+                "brazilsouth",
+                "canadacentral",
+                "canadaeast",
+                "centralindia",
+                "centralus",
+                "eastasia",
+                "eastus",
+                "eastus2",
+                "francecentral",
+                "germanywestcentral",
+                "japaneast",
+                "japanwest",
+                "koreacentral",
+                "northcentralus",
+                "northeurope",
+                "norwayeast",
+                "southafricanorth",
+                "southcentralus",
+                "southindia",
+                "southeastasia",
+                "switzerlandnorth",
+                "uaenorth",
+                "uksouth",
+                "ukwest",
+                "westcentralus",
+                "westeurope",
+                "westus",
+                "westus2",
+                "westus3"
+            ],
+            "metadata": {
+                "description": "Location for your data factory"
+            }
+        },
+        "vNetEnabled": {
+            "defaultValue": false,
+            "allowedValues": [
+                true,
+                false
+            ],
+            "type": "bool",
+            "metadata": {
+                "description": "Vnet enabled or disabled for data factory"
+            }
+        },
+        "publicNetworkAccess": {
+            "defaultValue": true,
+            "allowedValues": [
+                true,
+                false
+            ],
+            "type": "bool",
+            "metadata": {
+                "description": "Public network access enabled or disabled for data factory"
+            }
+        },
+        "privateEndpoints": {
+            "type": "array",
+            "defaultValue": [],
+            "metadata": {
+                "description": "Private endpoints. Empty if no private network access selected."
+            }
+        },
+        "ServiceOwner": {
+            "type": "String",
+            "metadata": {
+                "description": "The owner of resource."
+            }
+        },
+        "Purpose": {
+            "type": "String",
+            "metadata": {
+                "description": "Purpose of the resource."
+            }
+        },
+        "CostCentre": {
+            "type": "String",
+            "metadata": {
+                "description": "Cost Centre of the resource."
+            }
+        },
+        "Department": {
+            "type": "String",
+            "metadata": {
+                "description": "Department of the resource"
+            }
+        },
+        "Environment": {
+            "allowedValues": [
+                "dev",
+                "test",
+                "pre-prod",
+                "prod"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "The environment of the resource."
+            }
+        }
+    },
+    "variables": {
+        "hasPE": "[greater(length(parameters('privateEndpoints')), 0)]",
+        "resourceGroupId": "[if(variables('hasPE'),parameters('privateEndpoints')[0].resourceGroup.value.name, '')]"
+    },
+    "resources": [
+        {
+            "condition": "[equals(parameters('version'), 'V2')]",
+            "type": "Microsoft.DataFactory/factories",
+            "apiVersion": "2018-06-01",
+            "name": "[parameters('name')]",
+            "location": "[parameters('location')]",
+            "properties": {
+
+                "publicNetworkAccess": "[if(bool(parameters('publicNetworkAccess')), 'Enabled', 'Disabled')]"
+
+            },
+            "tags": {
+                "Owner": "[parameters('ServiceOwner')]",
+                "Purpose": "[parameters('Purpose')]",
+                "CostCentre": "[parameters('CostCentre')]",
+                "Department": "[parameters('Department')]",
+                "Enviornment": "[parameters('Environment')]"
+            },
+            "resources": [
+                {
+                    "condition": "[and(equals(parameters('version'), 'V2'), parameters('vNetEnabled'))]",
+                    "name": "[concat(parameters('name'), '/default')]",
+                    "type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
+                    "apiVersion": "2018-06-01",
+                    "properties": {},
+                    "dependsOn": [
+                        "[concat('Microsoft.DataFactory/factories/', parameters('name'))]"
+                    ]
+                },
+                {
+                    "condition": "[and(equals(parameters('version'), 'V2'), parameters('vNetEnabled'))]",
+                    "name": "[concat(parameters('name'), '/AutoResolveIntegrationRuntime')]",
+                    "type": "Microsoft.DataFactory/factories/integrationRuntimes",
+                    "apiVersion": "2018-06-01",
+                    "properties": {
+                        "type": "Managed",
+                        "managedVirtualNetwork": {
+                            "referenceName": "default",
+                            "type": "ManagedVirtualNetworkReference"
+                        },
+                        "typeProperties": {
+                            "computeProperties": {
+                                "location": "AutoResolve"
+                            }
+                        }
+                    },
+                    "dependsOn": [
+                        "[concat('Microsoft.DataFactory/factories/', parameters('name'))]",
+                        "[concat('Microsoft.DataFactory/factories/', parameters('name'), '/managedVirtualNetworks/default')]"
+                    ]
+                }
+            ]
+        },
+        {
+            "condition": "[equals(parameters('version'), 'V1')]",
+            "apiVersion": "2015-01-01-preview",
+            "name": "[parameters('name')]",
+            "location": "[if(equals(parameters('version'), 'V1'), parameters('location'), 'eastus')]",
+            "type": "Microsoft.DataFactory/dataFactories",
+            "properties": {},
+            "tags": {
+                "Owner": "[parameters('ServiceOwner')]",
+                "Purpose": "[parameters('Purpose')]",
+                "CostCentre": "[parameters('CostCentre')]",
+                "Department": "[parameters('Department')]",
+                "Enviornment": "[parameters('Environment')]"
+            }
+        },
+        {
+            "condition": "[not(parameters('publicNetworkAccess'))]",
+            "apiVersion": "2017-05-10",
+            "name": "[concat('deployPrivateEndpoint-', parameters('privateEndpoints')[copyIndex()].privateEndpoint.name)]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('privateEndpoints')[copyIndex()].resourceGroup.value.name]",
+            "subscriptionId": "[parameters('privateEndpoints')[copyIndex()].subscription.subscriptionId]",
+            "dependsOn": [
+                "[parameters('name')]"
+            ],
+            "copy": {
+                "name": "privateendpointscopy",
+                "count": "[length(parameters('privateEndpoints'))]"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "location": "[parameters('location')]",
+                            "name": "[parameters('privateEndpoints')[copyIndex()].privateEndpoint.name]",
+                            "type": "Microsoft.Network/privateEndpoints",
+                            "apiVersion": "2020-03-01",
+                            "properties": {
+                                "subnet": {
+                                    "id": "[parameters('privateEndpoints')[copyIndex()].privateEndpoint.properties.subnet.id]"
+                                },
+                                "privateLinkServiceConnections": [
+                                    {
+                                        "name": "[parameters('privateEndpoints')[copyIndex()].privateEndpoint.name]",
+                                        "properties": {
+                                            "privateLinkServiceId": "[concat('/subscriptions/',parameters('privateEndpoints')[copyIndex()].subscription.subscriptionId,'/resourcegroups/',variables('resourceGroupId'), '/providers/Microsoft.DataFactory/factories/', parameters('name'))]",
+                                            "groupIds": "[parameters('privateEndpoints')[copyIndex()].privateEndpoint.properties.privateLinkServiceConnections[0].properties.groupIds]"
+                                        }
+                                    }
+                                ]
+                            },
+                            "tags": {
+                                "Owner": "[parameters('ServiceOwner')]",
+                                "Purpose": "[parameters('Purpose')]",
+                                "CostCentre": "[parameters('CostCentre')]",
+                                "Department": "[parameters('Department')]",
+                                "Enviornment": "[parameters('Environment')]"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[concat('deployDnsZoneGroup-', parameters('privateEndpoints')[copyIndex()].privateEndpoint.name)]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('privateEndpoints')[copyIndex()].resourceGroup.value.name]",
+            "subscriptionId": "[parameters('privateEndpoints')[copyIndex()].subscription.subscriptionId]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', concat('deployPrivateEndpoint-', parameters('privateEndpoints')[copyIndex()].privateEndpoint.name))]"
+            ],
+            "condition": "[not(parameters('publicNetworkAccess'))]",
+            "copy": {
+                "name": "privateendpointdnscopy",
+                "count": "[length(parameters('privateEndpoints'))]"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+                            "apiVersion": "2020-03-01",
+                            "name": "[concat(parameters('privateEndpoints')[copyIndex()].privateEndpoint.name, '/', 'default')]",
+                            "location": "[parameters('location')]",
+                            "properties": {
+                                "privateDnsZoneConfigs": [
+                                    {
+                                        "name": "[parameters('privateEndpoints')[copyIndex()].subResource.expectedPrivateDnsZoneName]",
+                                        "properties": {
+                                            "privateDnsZoneId": "[concat('/subscriptions/',parameters('privateEndpoints')[copyIndex()].subscription.subscriptionId,'/resourcegroups/',variables('resourceGroupId'), '/providers/Microsoft.Network/privateDnsZones/', parameters('privateEndpoints')[copyIndex()].subResource.expectedPrivateDnsZoneName )]"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
