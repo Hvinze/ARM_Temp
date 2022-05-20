@@ -97,14 +97,6 @@
             ],
             "type": "String"
         },
-        "supportsHttpsTrafficOnly": {
-            "defaultValue": "false",
-            "allowedValues": [
-                "true",
-                "false"
-            ],
-            "type": "String"
-        },
         "allowBlobPublicAccess": {
             "defaultValue": "false",
             "allowedValues": [
@@ -161,8 +153,12 @@
             "properties": {
                 "accessTier": "[parameters('storageAccessTier')]",
                 "minimumTlsVersion": "[parameters('minimumTLSVersion')]",
-                "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
-                "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]"
+                "supportsHttpsTrafficOnly": true,
+                "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]",
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "defaultAction": "Deny"
+                }
             }
         },
 		        {
@@ -182,8 +178,12 @@
             "properties": {
                 "accessTier": "[parameters('storageAccessTier')]",
                 "minimumTlsVersion": "[parameters('minimumTLSVersion')]",
-                "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
-                "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]"
+                "supportsHttpsTrafficOnly": true,
+                "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]",
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "defaultAction": "Deny"
+                }
             }
         },
 		    {
