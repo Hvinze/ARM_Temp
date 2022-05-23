@@ -1,0 +1,646 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "allowedValues": [
+                "eastus",
+                "eastus2",
+                "southcentralus",
+                "westus2",
+                "westus3",
+                "australiaeast",
+                "southeastasia",
+                "northeurope",
+                "swedencentral",
+                "uksouth",
+                "westeurope",
+                "centralus",
+                "northcentralus",
+                "westus",
+                "southafricanorth",
+                "centralindia",
+                "eastasia",
+                "japaneast",
+                "koreacentral",
+                "canadacentral",
+                "francecentral",
+                "germanywestcentral",
+                "norwayeast",
+                "switzerlandnorth",
+                "uaenorth",
+                "brazilsouth",
+                "westcentralus",
+                "australiacentral",
+                "australiasoutheast",
+                "japanwest",
+                "koreasouth",
+                "southindia",
+                "westindia",
+                "canadaeast",
+                "ukwest"
+            ],
+            "metadata": {
+                "description": "The location of the Virtual Machine scale set resource."
+            }
+        },
+        "OSVersion": {
+            "type": "string",
+            "defaultValue": "Canonical:UbuntuServer:18.04-LTS:latest",
+            "allowedValues": [
+                "Canonical:UbuntuServer:16.04-LTS:latest",
+                "Canonical:UbuntuServer:18.04-LTS:latest",
+                "Canonical:UbuntuServer:20.04-LTS:latest",
+                "OpenLogic:CentOS:6.10:latest",
+                "OpenLogic:CentOS:6.9:latest",
+                "OpenLogic:CentOS:7.2:latest",
+                "OpenLogic:CentOS:7.3:latest",
+                "OpenLogic:CentOS:7.4:latest",
+                "OpenLogic:CentOS:7.5:latest",
+                "OpenLogic:CentOS:7.6:latest",
+                "OpenLogic:CentOS:7.7:latest",
+                "OpenLogic:CentOS:7_4:latest",
+                "OpenLogic:CentOS:7_4-gen2:latest",
+                "OpenLogic:CentOS:7_5-gen2:latest",
+                "OpenLogic:CentOS:7_6-gen2:latest",
+                "OpenLogic:CentOS:7_7-gen2:latest",
+                "OpenLogic:CentOS:7_8:latest",
+                "OpenLogic:CentOS:7_8-gen2:latest",
+                "OpenLogic:CentOS:7_9:latest",
+                "OpenLogic:CentOS:7_9-gen2:latest",
+                "OpenLogic:CentOS:8.0:latest",
+                "OpenLogic:CentOS:8_0-gen2:latest",
+                "OpenLogic:CentOS:8_1:latest",
+                "OpenLogic:CentOS:8_1-gen2:latest",
+                "OpenLogic:CentOS:8_2:latest",
+                "OpenLogic:CentOS:8_2-gen2:latest",
+                "OpenLogic:CentOS:8_3:latest",
+                "OpenLogic:CentOS:8_3-gen2:latest",
+                "OpenLogic:CentOS:8_4:latest",
+                "OpenLogic:CentOS:8_4-gen2:latest",
+                "OpenLogic:CentOS:8_5:latest",
+                "OpenLogic:CentOS:8_5-gen2:latest",
+                "RedHat:RHEL:7-LVM:latest",
+                "RedHat:RHEL:7lvm-gen2:latest",
+                "RedHat:RHEL:7.4:latest",
+                "RedHat:RHEL:74-gen2:latest",
+                "RedHat:RHEL:7.5:latest",
+                "RedHat:RHEL:75-gen2:latest",
+                "RedHat:RHEL:7.6:latest",
+                "RedHat:RHEL:76-gen2:latest",
+                "RedHat:RHEL:7.7:latest",
+                "RedHat:RHEL:77-gen2:latest",
+                "RedHat:RHEL:7.8:latest",
+                "RedHat:RHEL:78-gen2:latest",
+                "RedHat:RHEL:7_9:latest",
+                "RedHat:RHEL:79-gen2:latest",
+                "RedHat:RHEL:8:latest",
+                "RedHat:RHEL:8-gen2:latest",
+                "RedHat:RHEL:8-LVM:latest",
+                "RedHat:RHEL:8-lvm-gen2:latest",
+                "RedHat:RHEL:8.1:latest",
+                "RedHat:RHEL:81gen2:latest",
+                "RedHat:RHEL:8.1-ci:latest",
+                "RedHat:RHEL:81-ci-gen2:latest",
+                "RedHat:RHEL:8.2:latest",
+                "RedHat:RHEL:82gen2:latest",
+                "RedHat:RHEL:8_3:latest",
+                "RedHat:RHEL:83-gen2:latest",
+                "RedHat:RHEL:8_4:latest",
+                "RedHat:RHEL:84-gen2:latest",
+                "RedHat:RHEL:8_5:latest",
+                "RedHat:RHEL:85-gen2:latest"
+            ],
+            "metadata": {
+                "description": "The Linux OS for the VM."
+            }
+        },
+        "vmsize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "allowedValues": [
+                "Standard_B1ms",
+                "Standard_B1s",
+                "Standard_B2ms",
+                "Standard_B2s",
+                "Standard_B4ms",
+                "Standard_B8ms",
+                "Standard_D1",
+                "Standard_D11",
+                "Standard_D11_v2",
+                "Standard_D12",
+                "Standard_D12_v2",
+                "Standard_D13",
+                "Standard_D13_v2",
+                "Standard_D14",
+                "Standard_D14_v2",
+                "Standard_D15_v2",
+                "Standard_D16_v3",
+                "Standard_D16s_v3",
+                "Standard_D1_v2",
+                "Standard_D2",
+                "Standard_D2_v2",
+                "Standard_D2_v3",
+                "Standard_D2s_v3",
+                "Standard_D3",
+                "Standard_D32_v3",
+                "Standard_D32s_v3",
+                "Standard_D3_v2",
+                "Standard_D4",
+                "Standard_D4_v2",
+                "Standard_D4_v3",
+                "Standard_D4s_v3",
+                "Standard_D5_v2",
+                "Standard_D64_v3",
+                "Standard_D64s_v3",
+                "Standard_D8_v3",
+                "Standard_D8s_v3",
+                "Standard_DS1",
+                "Standard_DS11",
+                "Standard_DS11_v2",
+                "Standard_DS12",
+                "Standard_DS12_v2",
+                "Standard_DS13",
+                "Standard_DS13-2_v2",
+                "Standard_DS13-4_v2",
+                "Standard_DS13_v2",
+                "Standard_DS14",
+                "Standard_DS14-4_v2",
+                "Standard_DS14-8_v2",
+                "Standard_DS14_v2",
+                "Standard_DS15_v2",
+                "Standard_DS1_v2",
+                "Standard_DS2",
+                "Standard_DS2_v2",
+                "Standard_DS3",
+                "Standard_DS3_v2",
+                "Standard_DS4",
+                "Standard_DS4_v2",
+                "Standard_DS5_v2",
+                "Standard_E16_v3",
+                "Standard_E16s_v3",
+                "Standard_E2_v3",
+                "Standard_E2s_v3",
+                "Standard_E32-16_v3",
+                "Standard_E32-8s_v3",
+                "Standard_E32_v3",
+                "Standard_E32s_v3",
+                "Standard_E4_v3",
+                "Standard_E4s_v3",
+                "Standard_E64-16s_v3",
+                "Standard_E64-32s_v3",
+                "Standard_E64_v3",
+                "Standard_E64s_v3",
+                "Standard_E8_v3",
+                "Standard_E8s_v3",
+                "Standard_F1",
+                "Standard_F16",
+                "Standard_F16s",
+                "Standard_F16s_v2",
+                "Standard_F1s",
+                "Standard_F2",
+                "Standard_F2s",
+                "Standard_F2s_v2",
+                "Standard_F32s_v2",
+                "Standard_F4",
+                "Standard_F4s",
+                "Standard_F4s_v2",
+                "Standard_F64s_v2",
+                "Standard_F72s_v2",
+                "Standard_F8",
+                "Standard_F8s",
+                "Standard_F8s_v2",
+                "Standard_G1",
+                "Standard_G2",
+                "Standard_G3",
+                "Standard_G4",
+                "Standard_G5",
+                "Standard_GS1",
+                "Standard_GS2",
+                "Standard_GS3",
+                "Standard_GS4",
+                "Standard_GS4-4",
+                "Standard_GS4-8",
+                "Standard_GS5",
+                "Standard_GS5-16",
+                "Standard_GS5-8",
+                "Standard_H16",
+                "Standard_H16m",
+                "Standard_H16mr",
+                "Standard_H16r",
+                "Standard_H8",
+                "Standard_H8m",
+                "Standard_L16s",
+                "Standard_L32s",
+                "Standard_L4s",
+                "Standard_L8s",
+                "Standard_M128-32ms",
+                "Standard_M128-64ms",
+                "Standard_M128ms",
+                "Standard_M128s",
+                "Standard_M64-16ms",
+                "Standard_M64-32ms",
+                "Standard_M64ms",
+                "Standard_M64s",
+                "Standard_NC12",
+                "Standard_NC12s_v2",
+                "Standard_NC12s_v3",
+                "Standard_NC24",
+                "Standard_NC24r",
+                "Standard_NC24rs_v2",
+                "Standard_NC24rs_v3",
+                "Standard_NC24s_v2",
+                "Standard_NC24s_v3",
+                "Standard_NC6",
+                "Standard_NC6s_v2",
+                "Standard_NC6s_v3",
+                "Standard_ND12s",
+                "Standard_ND24rs",
+                "Standard_ND24s",
+                "Standard_ND6s",
+                "Standard_NV12",
+                "Standard_NV24",
+                "Standard_NV6"
+            ],
+            "metadata": {
+                "description": "Size of VMs in the VM Scale Set."
+            }
+        },
+        "OSdisktype": {
+            "type": "string",
+            "defaultValue": "StandardSSD_LRS",
+            "allowedValues": [
+                "StandardSSD_LRS",
+                "PremiumSSD_LRS",
+                "StandardHDD_LRS"
+            ],
+            "metadata": {
+                "description": "Type for the OS Disk in Virtual Machine"
+            }
+        },
+        "vmssName": {
+            "type": "string",
+            "metadata": {
+                "description": "Unique name for the scale set. Must be 3-61 characters in length and unique across the VNet."
+            },
+            "maxLength": 61
+        },
+        "instanceCount": {
+            "type": "int",
+            "metadata": {
+                "description": "Number of VM instances (100 or less)."
+            },
+            "defaultValue": 2
+        },
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "Admin username on all VMs."
+            }
+        },
+        "SSHPublicKey": {
+            "type": "string",
+            "metadata": {
+                "description": "SSH Key for the Virtual Machine."
+            }
+        },
+        "vNetNewOrExisting": {
+            "type": "string",
+            "defaultValue": "new",
+            "allowedValues": [
+                "new",
+                "existing"
+            ],
+            "metadata": {
+                "description": "Specify whether to create a new or existing virtual network for the VMSS."
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "defaultValue": "demo-Vnet",
+            "metadata": {
+                "description": "Name of the new/existing VNET"
+            }
+        },
+        "virtualNetworkResourceGroup": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().name]",
+            "metadata": {
+                "description": "Name of the new/existing VNET resource group"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "defaultValue": "default",
+            "metadata": {
+                "description": "Name of the subnet in the virtual network you want to use"
+            }
+        },
+        "NetworkSecurityGroupName": {
+            "type": "string",
+            "defaultValue": "demo-NSG",
+            "metadata": {
+                "description": "Name of the NSG"
+            }
+        },
+        "ServiceOwner": {
+            "type": "String",
+            "metadata": {
+                "description": "The owner of resource."
+            }
+        },
+        "Purpose": {
+            "type": "String",
+            "metadata": {
+                "description": "Purpose of the resource."
+            }
+        },
+        "CostCentre": {
+            "type": "String",
+            "metadata": {
+                "description": "Cost Centre of the resource."
+            }
+        },
+        "Department": {
+            "type": "String",
+            "metadata": {
+                "description": "Department of the resource"
+            }
+        },
+        "Environment": {
+            "allowedValues": [
+                "dev",
+                "test",
+                "pre-prod",
+                "prod"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "The environment of the resource."
+            }
+        }
+    },
+    "variables": {
+        "publicIPAddressName": "pip",
+        "loadBalancerName": "loadBalancer",
+        "loadBalancerFrontEndName": "loadBalancerFrontEnd",
+        "loadBalancerBackEndName": "loadBalancerBackEnd",
+        "loadBalancerProbeName": "loadBalancerHttpProbe",
+        "loadBalancerNatPoolName": "loadBalancerNatPool",
+        "OSVersionSplit": "[split(parameters('OSVersion'), ':')]",
+        "linuxConfiguration": {
+            "disablePasswordAuthentication": true,
+            "ssh": {
+                "publicKeys": [
+                    {
+                        "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
+                        "keyData": "[parameters('SSHPublicKey')]"
+                    }
+                ]
+            }
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('NetworkSecurityGroupName')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2019-02-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "default-allow-22",
+                        "properties": {
+                            "priority": 1000,
+                            "access": "Allow",
+                            "direction": "Inbound",
+                            "destinationPortRange": "22",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*"
+                        }
+                    }
+                ]
+            },
+            "tags": {
+                "Owner": "[parameters('ServiceOwner')]",
+                "Purpose": "[parameters('Purpose')]",
+                "CostCentre": "[parameters('CostCentre')]",
+                "Department": "[parameters('Department')]",
+                "Enviornment": "[parameters('Environment')]"
+            }
+        },
+        {
+            "condition": "[equals(parameters('vNetNewOrExisting'), 'new')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('virtualNetworkName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[parameters('subnetName')]",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/24"
+                        }
+                    }
+                ]
+            },
+            "tags": {
+                "Owner": "[parameters('ServiceOwner')]",
+                "Purpose": "[parameters('Purpose')]",
+                "CostCentre": "[parameters('CostCentre')]",
+                "Department": "[parameters('Department')]",
+                "Enviornment": "[parameters('Environment')]"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "name": "[parameters('vmssName')]",
+            "location": "[parameters('location')]",
+            "apiVersion": "2020-12-01",
+            "sku": {
+                "name": "[parameters('vmsize')]",
+                "capacity": "[parameters('instanceCount')]"
+            },
+            "properties": {
+                "overprovision": false,
+                "upgradePolicy": {
+                    "mode": "Automatic"
+                },
+                "virtualMachineProfile": {
+                    "storageProfile": {
+                        "osDisk": {
+                            "createOption": "FromImage",
+                            "caching": "ReadWrite",
+                            "managedDisk": {
+                                "storageAccountType": "[parameters('OSdisktype')]"
+                            }
+                        },
+                        "imageReference": {
+                            "publisher": "[variables('OSVersionSplit')[0]]",
+                            "offer": "[variables('OSVersionSplit')[1]]",
+                            "sku": "[variables('OSVersionSplit')[2]]",
+                            "version": "[variables('OSVersionSplit')[3]]"
+                        }
+                    },
+                    "osProfile": {
+                        "computerNamePrefix": "[parameters('vmssName')]",
+                        "adminUsername": "[parameters('adminUsername')]",
+                        "adminPassword": "[parameters('SSHPublicKey')]",
+                        "linuxConfiguration": "[variables('linuxConfiguration')]"
+                    },
+                    "networkProfile": {
+                        "networkInterfaceConfigurations": [
+                            {
+                                "name": "nic",
+                                "properties": {
+                                    "primary": true,
+                                    "ipConfigurations": [
+                                        {
+                                            "name": "ipconfig",
+                                            "properties": {
+                                                "subnet": {
+                                                    "id": "[resourceId(parameters('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                                                },
+                                                "loadBalancerBackendAddressPools": [
+                                                    {
+                                                        "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', variables('loadBalancerName'), variables('loadBalancerBackEndName'))]"
+                                                    }
+                                                ],
+                                                "loadBalancerInboundNatPools": [
+                                                    {
+                                                        "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatPools', variables('loadBalancerName'), variables('loadBalancerNatPoolName'))]"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "networkSecurityGroup": "[json(concat('{\"id\": \"', resourceId('Microsoft.Network/networkSecurityGroups', parameters('NetworkSecurityGroupName')), '\"}'))]"
+                                }
+                            }
+                        ]
+                    }
+
+                }
+            },
+            "tags": {
+                "Owner": "[parameters('ServiceOwner')]",
+                "Purpose": "[parameters('Purpose')]",
+                "CostCentre": "[parameters('CostCentre')]",
+                "Department": "[parameters('Department')]",
+                "Enviornment": "[parameters('Environment')]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('NetworkSecurityGroupName'))]",
+                "[resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('publicIPAddressName')]",
+            "location": "[parameters('location')]",
+            "apiVersion": "2020-05-01",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                    "domainNameLabel": "[toLower(parameters('vmssName'))]"
+                }
+            },
+            "tags": {
+                "Owner": "[parameters('ServiceOwner')]",
+                "Purpose": "[parameters('Purpose')]",
+                "CostCentre": "[parameters('CostCentre')]",
+                "Department": "[parameters('Department')]",
+                "Enviornment": "[parameters('Environment')]"
+            }
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers",
+            "name": "[variables('loadBalancerName')]",
+            "location": "[parameters('location')]",
+            "apiVersion": "2020-05-01",
+            "dependsOn": [
+                "[variables('publicIPAddressName')]"
+            ],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "[variables('loadBalancerFrontEndName')]",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+                            }
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "[variables('loadBalancerBackendName')]"
+                    }
+                ],
+                "loadBalancingRules": [
+                    {
+                        "name": "LBRule",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations', variables('loadBalancerName'), variables('loadBalancerFrontEndName'))]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', variables('loadBalancerName'), variables('loadBalancerBackendName'))]"
+                            },
+                            "protocol": "Tcp",
+                            "frontendPort": 80,
+                            "backendPort": 80,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 5,
+                            "probe": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/probes', variables('loadBalancerName'), variables('loadBalancerProbeName'))]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "[variables('loadBalancerProbeName')]",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 80,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2
+                        }
+                    }
+                ],
+                "inboundNatPools": [
+                    {
+                        "name": "[variables('loadBalancerNatPoolName')]",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations', variables('loadBalancerName'), variables('loadBalancerFrontEndName'))]"
+                            },
+                            "protocol": "Tcp",
+                            "frontendPortRangeStart": 50000,
+                            "frontendPortRangeEnd": 50019,
+                            "backendPort": 22
+                        }
+                    }
+                ]
+            },
+            "tags": {
+                "Owner": "[parameters('ServiceOwner')]",
+                "Purpose": "[parameters('Purpose')]",
+                "CostCentre": "[parameters('CostCentre')]",
+                "Department": "[parameters('Department')]",
+                "Enviornment": "[parameters('Environment')]"
+            }
+        }
+    ]
+}
