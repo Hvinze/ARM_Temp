@@ -419,8 +419,8 @@
                             "destinationPortRange": "22",
                             "protocol": "Tcp",
                             "sourcePortRange": "*",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*"
+                            "sourceAddressPrefix": "27.56.219.247",
+                            "destinationAddressPrefix": "27.56.219.247"
                         }
                     }
                 ]
