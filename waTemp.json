@@ -159,7 +159,9 @@
             ],
             "properties": {
                 "siteConfig": "[variables('configReference')[parameters('language')]]",
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanPortalName'))]"
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanPortalName'))]",
+                "clientCertEnabled": true,
+                "httpsOnly": false,
             },
             "tags": {
                 "Owner": "[parameters('ServiceOwner')]",
