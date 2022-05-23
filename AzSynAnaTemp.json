@@ -293,7 +293,11 @@
             "properties": {
                 "accessTier": "Hot",
                 "supportsHttpsTrafficOnly": true,
-                "isHnsEnabled": true
+                "isHnsEnabled": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "defaultAction": "Deny"
+                }
             },
             "sku": {
                 "name": "[parameters('storageAccountType')]"
