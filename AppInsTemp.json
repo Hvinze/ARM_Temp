@@ -1,0 +1,142 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of Application Insights resource."
+            }
+        },
+        "type": {
+            "type": "string",
+            "allowedValues": [
+                "other",
+                "web"
+            ],
+            "metadata": {
+                "description": "Type of app you are deploying. This field is for legacy reasons and will not impact the type of App Insights resource you deploy."
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "allowedValues": [
+                "eastus",
+                "eastus2",
+                "southcentralus",
+                "westus2",
+                "westus3",
+                "australiaeast",
+                "southeastasia",
+                "northeurope",
+                "swedencentral",
+                "uksouth",
+                "westeurope",
+                "centralus",
+                "southafricanorth",
+                "centralindia",
+                "eastasia",
+                "japaneast",
+                "koreacentral",
+                "canadacentral",
+                "francecentral",
+                "germanywestcentral",
+                "norwayeast",
+                "brazilsouth",
+                "northcentralus",
+                "westus",
+                "switzerlandnorth",
+                "uaenorth",
+                "australiacentral",
+                "australiacentral2",
+                "australiasoutheast",
+                "japanwest",
+                "koreasouth",
+                "southindia",
+                "canadaeast",
+                "francesouth",
+                "norwaywest",
+                "switzerlandwest",
+                "ukwest",
+                "uaecentral",
+                "brazilsoutheast"
+            ],
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "workspaceResourceGroupName": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().name]",
+            "metadata": {
+                "description": "Resource Group Name where the workspace is deployed."
+            }
+        },
+        "workspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the workspace."
+            }
+        },
+        "ServiceOwner": {
+            "type": "String",
+            "metadata": {
+                "description": "The owner of resource."
+            }
+        },
+        "Purpose": {
+            "type": "String",
+            "metadata": {
+                "description": "Purpose of the resource."
+            }
+        },
+        "CostCentre": {
+            "type": "String",
+            "metadata": {
+                "description": "Cost Centre of the resource."
+            }
+        },
+        "Department": {
+            "type": "String",
+            "metadata": {
+                "description": "Department of the resource"
+            }
+        },
+        "Environment": {
+            "allowedValues": [
+                "dev",
+                "test",
+                "pre-prod",
+                "prod"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "The environment of the resource."
+            }
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('name')]",
+            "type": "microsoft.insights/components",
+            "location": "[parameters('location')]",
+            "apiVersion": "2020-02-02-preview",
+            "dependsOn": [],
+            "properties": {
+                "ApplicationId": "[parameters('name')]",
+                "Application_Type": "[parameters('type')]",
+                "Flow_Type": "Bluefield",
+                "Request_Source": "rest",
+                "WorkspaceResourceId": "[resourceId(parameters('workspaceResourceGroupName'),'microsoft.operationalinsights/workspaces/',parameters('workspaceName'))]"
+            },
+            "tags": {
+                "Owner": "[parameters('ServiceOwner')]",
+                "Purpose": "[parameters('Purpose')]",
+                "CostCentre": "[parameters('CostCentre')]",
+                "Department": "[parameters('Department')]",
+                "Enviornment": "[parameters('Environment')]"
+            }
+        }
+    ]
+}
