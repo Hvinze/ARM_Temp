@@ -111,7 +111,8 @@
                     {
                         "locationName": "[parameters('location')]"
                     }
-                ]
+                ],
+                "disableKeyBasedMetadataWriteAccess": true
             },
             "tags": {
                 "Owner": "[parameters('ServiceOwner')]",
