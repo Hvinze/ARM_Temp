@@ -161,7 +161,7 @@
                 "siteConfig": "[variables('configReference')[parameters('language')]]",
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanPortalName'))]",
                 "clientCertEnabled": true,
-                "httpsOnly": false,
+                "httpsOnly": true
             },
             "tags": {
                 "Owner": "[parameters('ServiceOwner')]",
