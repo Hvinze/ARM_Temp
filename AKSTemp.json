@@ -296,6 +296,12 @@
             "metadata": {
                 "description": "The environment of the resource."
             }
+        },
+        "workspaceResourceId": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Monitor Log Analytics Resource ID"
+            }
         }
     },
     "resources": [
@@ -339,6 +345,20 @@
                 "networkProfile": {
                     "loadBalancerSku": "standard",
                     "networkPlugin": "[parameters('networkPlugin')]"
+                },
+                "apiServerAuthorizedIPRanges": [
+                    "27.62.213.6"
+                ],
+                "addonProfiles": {
+                    "omsagent": {
+                        "enabled": true,
+                        "config": {
+                            "logAnalyticsWorkspaceResourceID": "[parameters('workspaceResourceId')]"
+                        }
+                    },
+                    "kubeDashboard": {
+                        "enabled": false
+                    }
                 }
             },
             "tags": {
